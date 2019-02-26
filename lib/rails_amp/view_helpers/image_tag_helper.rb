@@ -15,7 +15,7 @@ module RailsAmp
         options = options.symbolize_keys
         check_for_image_tag_errors(options) if defined?(check_for_image_tag_errors)
 
-        src = options[:src] = options[:data].try(:[], :src) || source
+        src = options[:src] = (options[:data].try(:[], :src) || source)
 
         unless src.start_with?("cid:") || src.start_with?("data:") || src.blank?
           options[:alt] = options.fetch(:alt){ image_alt(src) }
