@@ -76,7 +76,11 @@ module RailsAmp
     end
 
     def key_to_controller(key)
-      (key.camelcase + 'Controller').constantize
+      begin
+        (key.camelcase + 'Controller').constantize
+      rescue
+        (key.camelcase + 'Widget').constantize
+      end
     end
 
     def target?(controller_path, action_name)
