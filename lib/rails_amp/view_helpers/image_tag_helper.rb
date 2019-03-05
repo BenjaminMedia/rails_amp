@@ -23,11 +23,11 @@ module RailsAmp
 
         options[:width], options[:height] = extract_dimensions(options.delete(:size)) if options[:size]
 
-        if options[:width].blank? || options[:height].blank?
-          options[:width], options[:height] = compute_image_size(source)
-        end
+        # if options[:width].blank? || options[:height].blank?
+        #   options[:width], options[:height] = compute_image_size(source)
+        # end
 
-        options[:layout] ||= 'fixed'
+        options[:layout] ||= 'fill'
         options.select! { |key, _| key.to_s.in?(AMP_IMG_PERMITTED_ATTRIBUTES) }
         tag('amp-img', options) + '</amp-img>'.html_safe
       end
