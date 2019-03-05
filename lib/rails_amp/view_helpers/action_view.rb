@@ -7,13 +7,12 @@ module RailsAmp
         return '' unless RailsAmp.target?(controller.controller_path, controller.action_name)
 
         amp_uri = URI.parse(request.url)
-        if request.path == root_path
-          amp_path = "#{controller.controller_path}/#{controller.action_name}.#{RailsAmp.default_format}"
+
+        if amp_uri.query.present?
+          amp_uri.query = amp_uri.query + "&format=#{RailsAmp.default_format}"
         else
-          amp_path = ".#{RailsAmp.default_format}"
+          amp_uri.query = "format=#{RailsAmp.default_format}"
         end
-        amp_uri.path = amp_uri.path + amp_path
-        amp_uri.query = ERB::Util.h(amp_uri.query) if amp_uri.query.present?
 
         %Q(<link rel="amphtml" href="#{amp_uri.to_s}" />).html_safe
       end
@@ -62,7 +61,9 @@ EOS
       end
 
       def rails_amp_canonical_url
-        request.url.gsub(".#{RailsAmp.default_format.to_s}", '')
+        url = request.url.gsub(/format=#{RailsAmp.default_format.to_s}/, '')
+        url = url.gsub("&&",'&').gsub("?&",'?')
+        ['&','?'].include?(url[-1]) ? url.chop : url
       end
 
       def amp_renderable?
